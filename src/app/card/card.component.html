@@ -1,0 +1,82 @@
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th scope="col">Card Owner</th>
+            <th scope="col">Card Number</th>
+            <th scope="col">Exp. Date</th>
+            <th scope="col">Security Code</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of cardTable">
+            <td>{{ item.cardOwnerName }}</td>
+            <td>{{ item.cardNumber }}</td>
+            <td>{{ item.expirationDate }}</td>
+            <td>{{ item.securityCode }}</td>
+            <td>
+                <button (click)="onEdit(item)" class="btn btn-info" data-toggle="modal" data-target="#editModal">
+                    Edit
+                </button>
+                <button (click)="deleteCard(item)" class="btn btn-danger mx-3">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="modal fade" id="editModal" tabindex="1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Edit Data Card</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form.formEdit">
+                    <div class="form-group">
+                        <label>Card Owner</label>
+                        <input required type="text" class="form-control" formControlName="cardOwnerName" id="cardOwnerName" name="cardOwnerName" placeholder="Full Name"/>
+                        <small style="color:red" class="small-class form-text" *ngIf="CardOwnerName && CardOwnerName.touched && CardOwnerName.invalid">
+                            Card Owner Name required at least 5 characters
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input required type="text" class="form-control" formControlName="cardNumber" id="cardNumber" name="cardNumber" placeholder="16 Digit Card Number"/>
+                        <small style="color:red" class="small-class form-text" *ngIf="CardNumber && CardNumber.touched && CardNumber.invalid">
+                            Card Number required at least 16 characters
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Exp. Date</label>
+                        <input required type="text" class="form-control" formControlName="expirationDate" id="expirationDate" name="expirationDate" placeholder="MM/YY"/>
+                        <small style="color:red" class="small-class form-text" *ngIf="ExpirationDate && ExpirationDate.touched && ExpirationDate.invalid">
+                            Expiration Date required correct format
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Security Code</label>
+                        <input required type="text" class="form-control" formControlName="securityCode" id="securityCode" name="securityCode" placeholder="Security Code"/>
+                        <small style="color:red" class="small-class form-text" *ngIf="SecurityCode && SecurityCode.touched && SecurityCode.invalid">
+                            Security Code required at least 5 characters
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary" (click)="editCard()">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
