@@ -14,20 +14,28 @@ export class CardComponent implements OnInit {
   card_id!: number
   cardobj!: number
 
+  cardowner!: string;    
+
   form = 
   {
     formEdit: new FormGroup
     (
       {
-        cardOwnerName: new FormControl('', [Validators.required, Validators.minLength(5)]),
-        cardNumber: new FormControl('', [Validators.required, Validators.minLength(5)]),
-        expirationDate: new FormControl('', [Validators.required, Validators.minLength(5)]),
-        securityCode: new FormControl('', [Validators.required, Validators.minLength(5)])
+        id: new FormControl('', [Validators.required]),
+        cardOwnerName: new FormControl('', [Validators.required, Validators.minLength(5), Validators.pattern(/^[a-z A-Z]+$/)]),
+        cardNumber: new FormControl('', [Validators.required, Validators.minLength(16), Validators.pattern(/^[0-9]+$/)]),
+        expirationDate: new FormControl('', [Validators.required, Validators.minLength(5), Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)]),
+        securityCode: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern(/^[0-9]+$/)])
       }
     )
   }
 
   constructor(private cardService: CardService) { }
+
+  get Id()
+  {
+    return this.form.formEdit.get('id')
+  }
 
   get CardOwnerName()
   {
@@ -73,13 +81,15 @@ export class CardComponent implements OnInit {
   editCard()
   {
     this.cardobj = this.form.formEdit.value
-    this.cardService.updateData(this.cardobj, this.card_id).subscribe((res)=>{
+    this.cardService.updateData(this.cardobj, this.card_id).subscribe((res)=>
+    {
       console.log(res)
       alert(`Card Data Successfully Edited`)
       let c = document.getElementById('canceledit')
       c?.click()
       this.form.formEdit.reset()
       this.getAllData()
+      location.reload()
     },
     (err)=>{
       alert(`Something went wrong`)
@@ -99,6 +109,35 @@ export class CardComponent implements OnInit {
           this.getAllData()
         }
       )
+    }
+  }
+
+  getRandomString(length: number) {
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+  }
+
+  reset()
+  {
+    this.form.formEdit.reset()
+  }
+
+  Search()
+  {
+    if(this.cardowner != "")
+    {
+      this.cardTable = this.cardTable.filter(res => 
+      {
+        return res.cardOwnerName.toLocaleLowerCase().match(this.cardowner.toLocaleLowerCase())
+      })
+    }
+    else if(this.cardowner == "")
+    {
+      this.ngOnInit()
     }
   }
 

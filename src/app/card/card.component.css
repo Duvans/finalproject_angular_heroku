@@ -1,0 +1,22 @@
+table
+{
+    margin: 100px;
+}
+
+#filterSearch
+{
+    height: 33px;
+    width: 25%;
+    font-size: 14pt;
+    border: 1px solid grey;
+    border-left: none;
+    padding: 1px;
+}
+
+#button1
+{
+    height: 35px;
+    background-color: #0b7dda;
+    color: white;
+    border: none;
+}

@@ -1,18 +1,26 @@
+<div style="text-align: center; margin: 30px;">
+    <button id="button1"><i class="fa fa-search" aria-hidden="true"></i></button>  
+    <input type="text" #myInput [(ngModel)]="cardowner" (input)="Search()" id="filterSearch" placeholder="Search.."/>
+</div>
+
 <table class="table mt-3">
     <thead>
         <tr>
+            <th scope="col">ID</th>
             <th scope="col">Card Owner</th>
             <th scope="col">Card Number</th>
-            <th scope="col">Exp. Date</th>
+            <th scope="col">Valid Through</th>
             <th scope="col">Security Code</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let item of cardTable">
+            <td>{{ item.id }}</td>
             <td>{{ item.cardOwnerName }}</td>
             <td>{{ item.cardNumber }}</td>
             <td>{{ item.expirationDate }}</td>
-            <td>{{ item.securityCode }}</td>
+            <td>{{ item.securityCode | hide}}</td>
             <td>
                 <button (click)="onEdit(item)" class="btn btn-info" data-toggle="modal" data-target="#editModal">
                     Edit
@@ -37,43 +45,50 @@
             <div class="modal-body">
                 <form [formGroup]="form.formEdit">
                     <div class="form-group">
+                        <label>ID</label>
+                        <input required type="text" class="form-control" formControlName="id" id="id" name="id" placeholder="ID"/>
+                        <small style="color:red" class="small-class form-text" *ngIf="Id && Id.touched && Id.invalid">
+                            Input your ID number
+                        </small>
+                    </div>
+                    <div class="form-group">
                         <label>Card Owner</label>
                         <input required type="text" class="form-control" formControlName="cardOwnerName" id="cardOwnerName" name="cardOwnerName" placeholder="Full Name"/>
-                        <small style="color:red" class="small-class form-text" *ngIf="CardOwnerName && CardOwnerName.touched && CardOwnerName.invalid">
-                            Card Owner Name required at least 5 characters
+                        <small style="color: red;" class="small-class form-text" *ngIf="CardOwnerName && CardOwnerName.touched && CardOwnerName.invalid">
+                            Owner Name required at least 5 characters
                         </small>
                     </div>
 
                     <div class="form-group">
                         <label>Card Number</label>
-                        <input required type="text" class="form-control" formControlName="cardNumber" id="cardNumber" name="cardNumber" placeholder="16 Digit Card Number"/>
-                        <small style="color:red" class="small-class form-text" *ngIf="CardNumber && CardNumber.touched && CardNumber.invalid">
-                            Card Number required at least 16 characters
+                        <input required type="text" class="form-control" formControlName="cardNumber" id="cardNumber" name="cardNumber" placeholder="16 Digit Card Number" maxlength="16"/>
+                        <small style="color: red;" class="small-class form-text" *ngIf="CardNumber && CardNumber.touched && CardNumber.invalid">
+                            Card Number required at least 16 numbers
                         </small>
                     </div>
 
                     <div class="form-group">
-                        <label>Exp. Date</label>
-                        <input required type="text" class="form-control" formControlName="expirationDate" id="expirationDate" name="expirationDate" placeholder="MM/YY"/>
-                        <small style="color:red" class="small-class form-text" *ngIf="ExpirationDate && ExpirationDate.touched && ExpirationDate.invalid">
-                            Expiration Date required correct format
+                        <label>Valid Through</label>
+                        <input required type="text" class="form-control" formControlName="expirationDate" id="expirationDate" name="expirationDate" placeholder="MM/YY" maxlength="5"/>
+                        <small style="color: red;" class="small-class form-text" *ngIf="ExpirationDate && ExpirationDate.touched && ExpirationDate.invalid">
+                            Date Format must be MM/YY
                         </small>
                     </div>
 
                     <div class="form-group">
                         <label>Security Code</label>
-                        <input required type="text" class="form-control" formControlName="securityCode" id="securityCode" name="securityCode" placeholder="Security Code"/>
-                        <small style="color:red" class="small-class form-text" *ngIf="SecurityCode && SecurityCode.touched && SecurityCode.invalid">
-                            Security Code required at least 5 characters
+                        <input required type="password" class="form-control" formControlName="securityCode" id="securityCode" name="securityCode" placeholder="Security Code" maxlength="3"/>
+                        <small style="color: red;" class="small-class form-text" *ngIf="SecurityCode && SecurityCode.touched && SecurityCode.invalid">
+                            Security Code required at least 3 numbers
                         </small>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">
+                <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal" (click)= "reset()">
                     Close
                 </button>
-                <button type="button" class="btn btn-primary" (click)="editCard()">
+                <button type="button" class="btn btn-primary" (click)="editCard()" [disabled]="form.formEdit.invalid">
                     Save Changes
                 </button>
             </div>
